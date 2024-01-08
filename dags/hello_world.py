@@ -3,6 +3,9 @@ from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.operators.bash import BashOperator
 
+import logging
+logger = logging.getLogger("airflow.task")
+
 default_args = {
     'owner': 'fabiatan',
     'retries': 5,

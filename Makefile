@@ -13,13 +13,18 @@ help:
 	@echo "build: build according to docker-compose.yaml"
 	@echo "up: run the services according to docker-compose.yaml"
 
-TEMP_ENV := .env
+TEMP_ENV := .env.local
 
 IMG := dev/airflow_extension
 
 build: clean_image prep_env
 	sudo docker build . -t dev/airflow_extension
 	@echo "Base image built"
+
+run:
+	sudo docker run -it -u root --rm \
+		-v $(shell dirname `pwd`):/app \
+		$(IMG) bash
 
 prep_env: .env
 	@cat .env > ${TEMP_ENV}
