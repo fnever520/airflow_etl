@@ -13,7 +13,7 @@ help:
 	@echo "build: build according to docker-compose.yaml"
 	@echo "up: run the services according to docker-compose.yaml"
 
-TEMP_ENV := .env.local
+TEMP_ENV := .env.tmp
 
 IMG := dev/airflow_extension
 

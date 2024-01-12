@@ -1,10 +1,10 @@
 FROM apache/airflow:latest-python3.10
-ENV TZ=Etc/UTC
-WORKDIR /app
-COPY . /app
-COPY requirements.txt /app/requirements.txt
+
+COPY . /opt/airflow
 USER root
-RUN apt-get update && apt-get install -y vim
+RUN apt-get update && apt-get install -y vim curl
+
+WORKDIR /opt/airflow
 USER airflow
 RUN pip install --upgrade pip
-RUN pip install --no-cache-dir --user -r /app/requirements.txt
+RUN pip install --no-cache-dir --user -r requirements.txt

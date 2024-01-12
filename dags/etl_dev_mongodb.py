@@ -10,7 +10,7 @@ MONGO_CONN_ID = 'dev_mongo'
 MONGO_DB = 'metastore'
 MONGO_COLLECTION = 'metacollection'
 
-def json_sample():
+def generate_json_sample():
     dummy_json = {
         'name': 'fabian',
         'time': timestamp
@@ -50,7 +50,7 @@ def run_etl_pipeline():
         data = json.loads(result)
         collection.insert_one(data)
 
-    extract_raw_data() >> clean_data() >> upload_mongodb(json_example())
+    extract_raw_data() >> clean_data() >> upload_mongodb(generate_json_sample())
 
 init_dag = run_etl_pipeline()
 
