@@ -18,7 +18,7 @@ TEMP_ENV := .env.tmp
 IMG := dev/airflow_extension
 
 build: clean_image prep_env
-	sudo docker build . -t dev/airflow_extension
+	sudo ${DOCKERCOMPOSE} --env-file ${TEMP_ENV} build postgres airflow-scheduler airflow-triggerer airflow-webserver
 	@echo "Base image built"
 
 run:
