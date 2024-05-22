@@ -4,6 +4,8 @@ import os
 import sys
 import shutil
 import pandas as pd
+from libs import env
+import logging
 from datetime import datetime, timedelta
 
 #Setting path
@@ -15,9 +17,6 @@ from airflow.utils.edgemodifier import Label
 from airflow.providers.mongo.hooks.mongo import MongoHook
 
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-MONGO_CONN_ID = 'mongodb_conn'
-MONGO_DB = 'metadata_db'
-MONGO_COLLECTION = 'metadata_collection'
 
 default_args = {
     'owner': 'Fabian Tan',
@@ -35,7 +34,16 @@ default_args = {
     schedule_interval="0 9 * * *",
     catchup=False
     )
-def run_etl_pipeline():        
+def run_etl_pipeline():
+    env_var = env.load_env()
+    MONGO_CONN_ID  = env_var['MONGO_CONN_ID']
+    MONGO_COLLECTION = env_var['MONGO_COLLECTION']
+
+    logging.basicConfig(
+        level=logging.INFO, format="%(asctime)s [%(levelname)s %(message)s]"
+    )
+    logger = logging.getLogger(__name__)
+    
     @task()
     def setup():
         return True
@@ -61,10 +69,10 @@ def run_etl_pipeline():
     
     @task()
     def upload_mongodb(data):
-        hook = MongoHook(conn_id=MONGO_CONN_ID)
+        hook = MongoHook(mongo_conn_id=MONGO_CONN_ID)
         client = hook.get_conn()
         print(client)
-        db = client[MONGO_DB]
+        db = client[hook.connection.schema]
         collection = db[MONGO_COLLECTION]
         print(f"Connected to MongoDB - {client.server_info()}")
         outcome = collection.insert_one(data)
