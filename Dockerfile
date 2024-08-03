@@ -1,6 +1,6 @@
 FROM apache/airflow:2.8.0-python3.9
 
-COPY . /opt/airflow
+COPY ./requirements /opt/airflow
 WORKDIR /opt/airflow
 USER root
 RUN apt-get update && apt-get install -y vim curl wget ssh gosu
